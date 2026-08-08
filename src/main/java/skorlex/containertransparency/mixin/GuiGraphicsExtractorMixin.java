@@ -1,15 +1,9 @@
 package skorlex.containertransparency.mixin;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.textures.GpuSampler;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,32 +12,16 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import skorlex.containertransparency.config.ContainerTransparencyConfig;
 
-import java.util.List;
-
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class GuiGraphicsExtractorMixin {
 
     @Unique
-    private boolean containerTransparency$isRenderingTooltip = false;
-
-    @Inject(method = "tooltip", at = @At("HEAD"))
-    private void onBeforeTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo ci) {
-        this.containerTransparency$isRenderingTooltip = true;
-    }
-
-    @Inject(method = "tooltip", at = @At("RETURN"))
-    private void onAfterTooltip(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo ci) {
-        this.containerTransparency$isRenderingTooltip = false;
-    }
+    private static int transparencyDepth = 0;
 
     @Unique
     private int applyTransparency(int originalColor) {
-        if (this.containerTransparency$isRenderingTooltip) {
-            return originalColor;
-        }
-
-        Minecraft client = Minecraft.getInstance();
-        if (client != null && client.gui != null && client.gui.screen() instanceof AbstractContainerScreen) {
+        // Only apply transparency if our depth counter is active
+        if (transparencyDepth > 0) {
             int currentAlpha = (originalColor >> 24) & 0xFF;
             if (currentAlpha == 0) {
                 currentAlpha = 255;
@@ -52,6 +30,16 @@ public abstract class GuiGraphicsExtractorMixin {
             return (originalColor & 0x00FFFFFF) | (newAlpha << 24);
         }
         return originalColor;
+    }
+
+    @Unique
+    private boolean isTarget(Identifier location) {
+        if (location == null) return false;
+        String path = location.getPath();
+        return path.contains("container") ||
+                path.contains("recipe_book") ||
+                path.contains("effect_background") ||
+                path.contains("text_field");
     }
 
     @ModifyVariable(
@@ -72,5 +60,56 @@ public abstract class GuiGraphicsExtractorMixin {
     )
     private int modifyTiledBlitColorAlpha(int originalColor) {
         return applyTransparency(originalColor);
+    }
+
+    // 1. Catch legacy containers
+    @Inject(
+            method = "innerBlit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIFFFFI)V",
+            at = @At("HEAD")
+    )
+    private void onInnerBlitIdentifierHead(RenderPipeline renderPipeline, Identifier location, int x0, int x1, int y0, int y1, float u0, float u1, float v0, float v1, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth++;
+    }
+
+    @Inject(
+            method = "innerBlit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIFFFFI)V",
+            at = @At("RETURN")
+    )
+    private void onInnerBlitIdentifierReturn(RenderPipeline renderPipeline, Identifier location, int x0, int x1, int y0, int y1, float u0, float u1, float v0, float v1, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth--;
+    }
+
+    // 2. Catch standard blitSprite calls
+    @Inject(
+            method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V",
+            at = @At("HEAD")
+    )
+    private void onBlitSpriteHead(RenderPipeline renderPipeline, Identifier location, int x, int y, int width, int height, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth++;
+    }
+
+    @Inject(
+            method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V",
+            at = @At("RETURN")
+    )
+    private void onBlitSpriteReturn(RenderPipeline renderPipeline, Identifier location, int x, int y, int width, int height, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth--;
+    }
+
+    // 3. Catch complex/sliced blitSprite calls
+    @Inject(
+            method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIIIIII)V",
+            at = @At("HEAD")
+    )
+    private void onBlitSpriteAdvancedHead(RenderPipeline renderPipeline, Identifier location, int spriteWidth, int spriteHeight, int textureX, int textureY, int x, int y, int width, int height, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth++;
+    }
+
+    @Inject(
+            method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIIIIII)V",
+            at = @At("RETURN")
+    )
+    private void onBlitSpriteAdvancedReturn(RenderPipeline renderPipeline, Identifier location, int spriteWidth, int spriteHeight, int textureX, int textureY, int x, int y, int width, int height, int color, CallbackInfo ci) {
+        if (isTarget(location)) transparencyDepth--;
     }
 }
