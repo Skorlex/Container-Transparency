@@ -20,7 +20,6 @@ public abstract class GuiGraphicsExtractorMixin {
 
     @Unique
     private int applyTransparency(int originalColor) {
-        // Only apply transparency if our depth counter is active
         if (transparencyDepth > 0) {
             int currentAlpha = (originalColor >> 24) & 0xFF;
             if (currentAlpha == 0) {
@@ -36,10 +35,10 @@ public abstract class GuiGraphicsExtractorMixin {
     private boolean isTarget(Identifier location) {
         if (location == null) return false;
         String path = location.getPath();
+
         return path.contains("container") ||
                 path.contains("recipe_book") ||
-                path.contains("effect_background") ||
-                path.contains("text_field");
+                path.contains("effect_background");
     }
 
     @ModifyVariable(
@@ -62,7 +61,6 @@ public abstract class GuiGraphicsExtractorMixin {
         return applyTransparency(originalColor);
     }
 
-    // 1. Catch legacy containers
     @Inject(
             method = "innerBlit(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIFFFFI)V",
             at = @At("HEAD")
@@ -79,7 +77,6 @@ public abstract class GuiGraphicsExtractorMixin {
         if (isTarget(location)) transparencyDepth--;
     }
 
-    // 2. Catch standard blitSprite calls
     @Inject(
             method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V",
             at = @At("HEAD")
@@ -96,7 +93,6 @@ public abstract class GuiGraphicsExtractorMixin {
         if (isTarget(location)) transparencyDepth--;
     }
 
-    // 3. Catch complex/sliced blitSprite calls
     @Inject(
             method = "blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIIIIII)V",
             at = @At("HEAD")
