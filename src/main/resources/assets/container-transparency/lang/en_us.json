@@ -1,0 +1,4 @@
+{
+  "options.container-transparency": "Container Opacity",
+  "options.container-transparency.tooltip": "Adjusts the background opacity of container and inventory screens."
+}
