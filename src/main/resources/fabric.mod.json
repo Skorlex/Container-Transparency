@@ -2,21 +2,27 @@
 	"schemaVersion": 1,
 	"id": "container-transparency",
 	"version": "${version}",
-	"name": "Container Transparency",
-	"description": "A Fabric mod that lets you customize the transparency and opacity of Minecraft inventory and container backgrounds.",
+	"name": "Clear UI",
+	"description": "Customize the transparency and opacity of inventory screens, HUD elements, potion indicators, and the recipe book.",
 	"authors": [
 		"Skorlex"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
+		"homepage": "https://modrinth.com/mod/container-transparency",
 		"sources": "https://github.com/Skorlex/Container-Transparency"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/container-transparency/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
 			"skorlex.containertransparency.ContainerTransparency"
+		],
+		"client": [
+			"skorlex.containertransparency.ContainerTransparencyClient"
+		],
+		"modmenu": [
+			"skorlex.containertransparency.config.ContainerTransparencyModMenu"
 		]
 	},
 	"mixins": [
