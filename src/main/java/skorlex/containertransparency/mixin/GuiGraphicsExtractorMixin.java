@@ -67,7 +67,6 @@ public abstract class GuiGraphicsExtractorMixin {
                 if (hue < 0.0F) hue += 1.0F;
             }
 
-            // Applies a perfectly even, progressive linear fade across the entire slider range
             if (rawBrightness < 0.5F) {
                 float factor = (0.5F - rawBrightness) * 2.0F;
                 saturation = saturation * (1.0F - factor);
@@ -158,7 +157,8 @@ public abstract class GuiGraphicsExtractorMixin {
             recipeBookToggleDepth++;
         } else if (lowerPath.startsWith("recipe_book/filter")) {
             recipeBookFilterDepth++;
-        } else if (!lowerPath.contains("hud/")) {
+        } else if (!lowerPath.contains("hud/") && !RenderState.isDrawingHud && !lowerPath.contains("icons")) {
+            // FIX: We now explicitly ignore everything drawn during the HUD phase, and specifically ignore "icons"
 
             Screen currentScreen = Minecraft.getInstance().gui.screen();
             boolean isGamemodeSwitcher = currentScreen != null && currentScreen.getClass().getSimpleName().contains("GameModeSwitcher");
@@ -221,7 +221,7 @@ public abstract class GuiGraphicsExtractorMixin {
             recipeBookToggleDepth--;
         } else if (lowerPath.startsWith("recipe_book/filter")) {
             recipeBookFilterDepth--;
-        } else if (!lowerPath.contains("hud/")) {
+        } else if (!lowerPath.contains("hud/") && !RenderState.isDrawingHud && !lowerPath.contains("icons")) {
 
             Screen currentScreen = Minecraft.getInstance().gui.screen();
             boolean isGamemodeSwitcher = currentScreen != null && currentScreen.getClass().getSimpleName().contains("GameModeSwitcher");
