@@ -1,34 +1,31 @@
 {
-  "options.containertransparency.title": "Clear UI",
+  "options.containertransparency.title": "Container Transparency",
   "options.container-transparency.master_toggle": "Mod Enabled",
-
-  "options.containertransparency.category.container": "Container Elements...",
-  "options.containertransparency.category.container.tooltip": "Configure transparency for inventories, chests, crafting tables, and item slots.",
-  "options.containertransparency.title.container": "Container Elements",
-
-  "options.containertransparency.category.hud": "HUD Elements...",
-  "options.containertransparency.category.hud.tooltip": "Configure transparency for your on-screen hotbar, health hearts, armor, and experience bars.",
-  "options.containertransparency.title.hud": "HUD Elements",
 
   "options.containertransparency.category.potion": "Potion Elements...",
   "options.containertransparency.title.potion": "Potion Elements",
+
+  "options.containertransparency.category.potion.container": "Container Potion Elements...",
+  "options.containertransparency.title.potion.container": "Container Potion Elements",
+
+  "options.containertransparency.category.potion.hud": "HUD Potion Elements...",
+  "options.containertransparency.title.potion.hud": "HUD Potion Elements",
 
   "options.containertransparency.category.recipe_book": "Recipe Book Elements...",
   "options.containertransparency.title.recipe_book": "Recipe Book Elements",
 
   "options.container-transparency.container": "Container Base",
-  "options.container-transparency.container.tooltip": "Adjusts the background opacity of container and inventory screens.",
+  "options.container-transparency.container.tooltip": "Adjusts the background opacity of container and inventory screens. Also controls the Recipe Book background and Search Bar.",
   "options.container-transparency.slot": "Slot Highlight",
   "options.container-transparency.slot.tooltip": "Adjusts the intensity of the highlight when hovering over an item slot.",
-  "options.container-transparency.container.count": "Item Count Text",
-  "options.container-transparency.container.count.tooltip": "Adjusts the opacity of the item quantity numbers in containers.",
+
+  "options.container-transparency.container.text": "Text Brightness",
+  "options.container-transparency.container.text.tooltip": "Adjusts the color brightness of container titles to improve contrast with dark/light mode resource packs.\nLeft = Whiter\nMiddle = Default\nRight = Darker",
 
   "options.container-transparency.recipe_book.toggle": "Recipe Book Toggle",
   "options.container-transparency.recipe_book.toggle.tooltip": "Adjusts the opacity of the recipe book icon inside your inventory.",
   "options.container-transparency.recipe_book.slot": "Recipe Slot",
   "options.container-transparency.recipe_book.slot.tooltip": "Adjusts the background opacity of all discovered recipes.",
-  "options.container-transparency.recipe_book.search": "Recipe Search Bar",
-  "options.container-transparency.recipe_book.search.tooltip": "Adjusts the opacity of the search bar inside the recipe book.",
 
   "options.container-transparency.container.potion.icon": "Potion Icon",
   "options.container-transparency.container.potion.icon.tooltip": "Adjusts the opacity of potion icons inside your inventory.",
@@ -36,13 +33,6 @@
   "options.container-transparency.container.potion.background.tooltip": "Adjusts the opacity of the gray potion background inside your inventory.",
   "options.container-transparency.container.potion.text": "Potion Text",
   "options.container-transparency.container.potion.text.tooltip": "Adjusts the opacity of the potion names and durations in your inventory.",
-
-  "options.container-transparency.hud": "HUD Base",
-  "options.container-transparency.hud.tooltip": "Adjusts the opacity of on-screen HUD elements (hotbar, hearts, exp bar, etc.).",
-  "options.container-transparency.hud.selection": "Hotbar Selection",
-  "options.container-transparency.hud.selection.tooltip": "Adjusts the opacity of the highlight box on your selected hotbar slot.",
-  "options.container-transparency.hud.count": "HUD Item Count Text",
-  "options.container-transparency.hud.count.tooltip": "Adjusts the opacity of the item quantity numbers in your hotbar.",
 
   "options.container-transparency.hud.potion.icon": "HUD Potion Icon",
   "options.container-transparency.hud.potion.icon.tooltip": "Adjusts the opacity of active potion icons on the main screen.",
@@ -52,6 +42,6 @@
   "gui.done": "Done",
   "gui.back": "Back",
 
-  "key.category.container-transparency.key_category": "Clear UI",
+  "key.category.container-transparency.key_category": "Container Transparency",
   "key.containertransparency.open_menu": "Open Config Menu"
 }

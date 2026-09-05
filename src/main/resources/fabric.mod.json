@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "container-transparency",
 	"version": "${version}",
-	"name": "Clear UI",
+	"name": "Container Transparency",
 	"description": "Customize the transparency and opacity of inventory screens, HUD elements, potion indicators, and the recipe book.",
 	"authors": [
 		"Skorlex"

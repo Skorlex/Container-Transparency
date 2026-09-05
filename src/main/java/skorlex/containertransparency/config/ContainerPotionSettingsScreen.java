@@ -10,14 +10,15 @@ public class ContainerPotionSettingsScreen extends Screen {
     private final Screen parent;
 
     public ContainerPotionSettingsScreen(Screen parent) {
-        super(Component.translatable("options.containertransparency.title.potion"));
+        // FIX: Pointing to the new "Container Potion Elements" translation key
+        super(Component.translatable("options.containertransparency.title.potion.container"));
         this.parent = parent;
     }
 
     private Component formatValue(Component caption, Double value) {
         int percent = (int) (value * 100);
-        if (percent <= 0) return Component.empty().append(caption).append(": ").append(Component.literal("OFF"));
-        else if (percent >= 100) return Component.empty().append(caption).append(": ").append(Component.literal("Default"));
+        if (value <= 0.0) return Component.empty().append(caption).append(": ").append(Component.literal("OFF"));
+        else if (value >= 1.0) return Component.empty().append(caption).append(": ").append(Component.literal("Default"));
         else return Component.empty().append(caption).append(": ").append(Component.literal(percent + "%"));
     }
 
